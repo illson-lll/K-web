@@ -45,7 +45,7 @@ https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
 
   <!-- Вікна -->
   <!-- Логін -->
-  <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="login-modal-label">
+  <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="login-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header">
@@ -71,8 +71,10 @@ https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
           </form>
         </div>
         <div class="modal-footer d-flex justify-content-between">
-          <button type="button" data-bs-target="#reg-modal" data-bs-toggle="modal"
-            class="btn btn-outline-secondary">Немає аккаунту?</button>
+          <button type="button" data-bs-target="#reg-modal" data-bs-toggle="modal" data-bs-dismiss="modal"
+            class="btn btn-outline-secondary">
+            Немає аккаунту?
+          </button>
           <button type="submit" form="login-form" class="btn btn-primary">Увійти</button>
         </div>
       </div>
