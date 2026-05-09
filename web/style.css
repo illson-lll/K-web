@@ -15,3 +15,21 @@ body {
         width: 95vw;
     }
 }
+
+.custom-underline {
+    position: relative;
+    display: inline-block;
+}
+.custom-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor; 
+    transition: width 0.3s ease; 
+}
+#profile-btn:hover .custom-underline::after {
+    width: 100%;
+}
