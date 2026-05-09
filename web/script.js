@@ -32,7 +32,7 @@
   async function registerUser(username, password) {
     console.log(`logging ${username}`);
     try {
-      const response = await fetch('http://localhost:3000/api/register', {
+      const response = await fetch(`http://${window.location.hostname}:3000/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -56,7 +56,7 @@
   async function loginUser(username, password) {
     console.log(`logging ${username}`);
     try {
-      const response = await fetch('http://localhost:3000/api/login', {
+      const response = await fetch(`http://${window.location.hostname}:3000/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -65,14 +65,15 @@
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('username', data.username);
-        const profile_text = document.getElementById("profile-text");
-        if (profile_text) profile_text.innerText = data.username;
         const loginModal = bootstrap.Modal.getInstance(document.getElementById('login-modal'));
         if (loginModal) loginModal.hide();
         const regModal = bootstrap.Modal.getInstance(document.getElementById("reg-modal"));
         if (regModal) regModal.hide();
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+        const profile_text = document.getElementById("profile-text");
+        if (profile_text) profile_text.innerText = data.username;
 
         isLoggedIn = true;
         showToast("Ви ввійшли!")
