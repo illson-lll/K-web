@@ -33,3 +33,24 @@ body {
 #profile-btn:hover .custom-underline::after {
     width: 100%;
 }
+
+.text-danger.small {
+  transition: all 0.4s ease-out;
+  
+  opacity: 0;
+  transform: translateY(-10px);
+
+  max-height: 0;
+  overflow: hidden;
+  margin-bottom: 0 !important;
+}
+
+.text-danger.small.show {
+  opacity: 1;
+  transform: translateY(0);
+
+  max-height: 50px; 
+  margin-bottom: 0.5rem !important;
+}
+
+
