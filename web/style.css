@@ -53,4 +53,9 @@ body {
   margin-bottom: 0.5rem !important;
 }
 
-
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    touch-action: none; 
+}
