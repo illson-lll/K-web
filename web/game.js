@@ -11,7 +11,7 @@ const config = {
     },
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH, // Phaser сам вирахує центр
+        autoCenter: Phaser.Scale.CENTER_BOTH, 
     },
 };
 
@@ -20,33 +20,168 @@ var DOWN = 1;
 var LEFT = 2;
 var RIGHT = 3;
 
+var total = 0;
+
 const game = new Phaser.Game(config);
 
-function create() {
-    let graphics = this.add.graphics();
+function drawGrid(scene) {
+    let graphics = scene.add.graphics();
     graphics.lineStyle(1, 0x333333, 0.8);
-
-    
     for (let x = 0; x <= 420; x += 21) {
         graphics.moveTo(x, 0);
         graphics.lineTo(x, 420);
-    }    
+    }
     for (let y = 0; y <= 420; y += 21) {
         graphics.moveTo(0, y);
         graphics.lineTo(420, y);
     }
     graphics.strokePath();
-
-    //Лінії розмежування
-
-    food = this.add.sprite(21 * 5, 21 * 5, 'apple').setOrigin(0);
 }
 
-let food;
 function preload() {
     this.load.image('apple', 'assets/apple.png');
+    this.load.image('body', 'assets/body.png');
 }
 
-function update() {
+class Apple extends Phaser.GameObjects.Sprite {
+    constructor(scene, x, y) {
+        super(scene, x, y, 'apple');
+        this.setOrigin(0);
+        scene.add.existing(this);
 
+        total = 0;
+    }
+    eat() {
+        total++;
+
+        let x = Phaser.Math.Between(0, 19) * 21;
+        let y = Phaser.Math.Between(0, 19) * 21;
+
+        this.setPosition(x, y);
+    }
+}
+
+class Snake {
+    constructor(scene){
+        this.scene = scene;
+        this.body = []; 
+        this.grid_size = 21; 
+
+        this.direction = RIGHT; 
+        this.next_direction = RIGHT; 
+
+        this.move_time = 0;
+        this.speed = 150;
+
+        this.head = scene.add.sprite(this.grid_size * 10, this.grid_size * 10,'body')
+        this.head.setOrigin(0);
+        this.body.push(this.head);
+        this.grow();
+        this.grow();
+    }
+
+    setDirection(new_dir) {
+        if (this.direction === UP && new_dir === DOWN) return;
+        if (this.direction === DOWN && new_dir === UP) return;
+        if (this.direction === LEFT && new_dir === RIGHT) return;
+        if (this.direction === RIGHT && new_dir === LEFT) return;
+        this.next_direction = new_dir;
+    }
+    update(time) {
+        if (time >= this.move_time) {
+            return this.move(time);
+        }
+    }
+
+    move(time) {
+        this.direction = this.next_direction;
+
+        let x = this.head.x;
+        let y = this.head.y;
+
+        if (this.direction === UP) y -= this.grid_size;
+        else if (this.direction === DOWN) y += this.grid_size;
+        else if (this.direction === LEFT) x -= this.grid_size;
+        else if (this.direction === RIGHT) x += this.grid_size;
+
+        let tail = this.body.pop();
+        tail.x = this.head.x;
+        tail.y = this.head.y;
+        this.body.splice(1, 0, tail);
+
+        this.head.x = x;
+        this.head.y = y;
+
+        this.move_time = time + this.speed;
+
+        return true;
+    }
+    grow() {
+        let last_segment = this.body[this.body.length - 1];
+        let new_segment = this.scene.add.sprite(last_segment.x, last_segment.y, 'body');
+        new_segment.setOrigin(0);
+        this.body.push(new_segment);
+    }
+}
+
+
+
+
+function create() {
+    drawGrid(this);
+
+    food = new Apple(this, 21 * 5, 21 * 5);
+    snake = new Snake(this);
+    cursors = this.input.keyboard.createCursorKeys();
+
+
+    let downX, upX, downY, upY, threshold = 40;
+
+    this.input.on('pointerdown', function (pointer) {
+        downX = pointer.x;
+        downY = pointer.y;
+    });
+
+
+    this.input.on('pointerup', function (pointer) {
+        upX = pointer.x;
+        upY = pointer.y;
+
+        let diffX = Math.abs(downX - upX);
+        let diffY = Math.abs(downY - upY);
+
+        if (diffX > diffY) {
+            // Горизонтальний рух
+            if (upX < downX - threshold) {
+                snake.setDirection(LEFT);
+            } else if (upX > downX + threshold) {
+                snake.setDirection(RIGHT);
+            }
+        } else {
+            if (upY < downY - threshold) {
+                snake.setDirection(UP);
+            } else if (upY > downY + threshold) {
+                snake.setDirection(DOWN);
+            }
+        }
+    });
+
+    //https://www.html5gamedevs.com/topic/39661-creating-swiping-mechanism/
+}
+
+function checkEat() {
+    if (snake.head.x === food.x && snake.head.y === food.y) {
+        food.eat();
+        snake.grow();
+    }
+}
+
+function update(time) {
+    if (cursors.up.isDown) snake.setDirection(UP);
+    else if (cursors.down.isDown) snake.setDirection(DOWN);
+    else if (cursors.left.isDown) snake.setDirection(LEFT);
+    else if (cursors.right.isDown) snake.setDirection(RIGHT);
+    
+    snake.update(time);
+    checkEat();
 }
