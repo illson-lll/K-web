@@ -10,6 +10,7 @@
 https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
   <title>Snake Eater</title>
+  <link rel="icon" type="image/png" href="assets/snake-icon.png">
 </head>
 
 <body>
@@ -23,18 +24,32 @@ https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
         </a>
         <h4 class="mb-0 lh-1"><B>Snake eater</B></h4>
       </div>
-      <a class="icon-link icon-link-hover text-black text-decoration-none d-flex align-items-center"
-        style="--bs-icon-link-transform: translate3d(0, -.125rem, 0); font-size: 1.25rem;" href="#" id="profile-btn">
+      <div class="d-flex align-items-center gap-3">
+        <a class="icon-link icon-link-hover text-black text-decoration-none d-flex align-items-center me-3"
+          style="--bs-icon-link-transform: translate3d(0, -.125rem, 0); font-size: 1.25rem;" href="#"
+          id="leaderboard-btn" data-bs-target="#leaderboard-modal" data-bs-toggle="modal" data-bs-dismiss="modal">
 
-        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person-circle"
-          viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-          <path fill-rule="evenodd"
-            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-        </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+            class="bi bi-bar-chart-line" viewBox="0 0 16 16">
+            <path
+              d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z" />
+          </svg>
 
-        <span id="profile-text" class=" custom-underline fw-bold h6 mb-0 lh-0">Увійти</span>
-      </a>
+          <span id="personal-best-text" class="custom-underline fw-bold h6 mb-0 ms-1">0</span>
+        </a>
+        <a class="icon-link icon-link-hover text-black text-decoration-none d-flex align-items-center"
+          style="--bs-icon-link-transform: translate3d(0, -.125rem, 0); font-size: 1.25rem;" href="#" id="profile-btn">
+
+          <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person-circle"
+            viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+            <path fill-rule="evenodd"
+              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+          </svg>
+
+          <span id="profile-text" class=" custom-underline fw-bold h6 mb-0 lh-0">Увійти</span>
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -45,7 +60,8 @@ https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
       <!-- Початкове меню -->
       <div class="overlay-game" id="overlay-game-start">
         <div class="card" style="width: 14rem;">
-          <img src="assets/snake_canva.png" class="p-2 mt-2 card-img-top mx-auto rounded" style="width: 70%;" alt="Snake">
+          <img src="assets/snake_canva.png" class="p-2 mt-2 card-img-top mx-auto rounded" style="width: 70%;"
+            alt="Snake">
           <div class="card-body pt-0 text-center">
             <h5 class="card-title mt-3 fw-bold" style="font-size: 1.2rem;">
               Snake eater
@@ -187,13 +203,31 @@ https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <h7><span id="username-profile"></span></h7> <br>
-          <h7><span id="personal-best"></span></h7>
+          <h7>Ім'я: <span id="username-profile"></span></h7> <br>
+          <h7>Найкращий результат: <span id="personal-best-profile"></span></h7>
         </div>
         <div class="modal-footer d-flex justify-content-between">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрити</button>
           <button type="button" form="login-form" id="logout-button" data-bs-dismiss="modal"
             class="btn btn-danger">Вийти</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Таблиця лідерів -->
+
+  <div class="modal fade" id="leaderboard-modal" tabindex="-1" aria-labelledby="leaderboard-modal-label"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="leaderboard-modal-label">Таблиця лідерів</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped" id="leaderboard-table">
+
+          </table>
         </div>
       </div>
     </div>
