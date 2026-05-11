@@ -42,8 +42,7 @@ app.post('/api/register', async (req, res) => {
             username: username, 
             password: hashpass 
         });
-        await newUser.save(); // пуш в дб
-
+        await newUser.save(); 
         console.log("User created:", username);
         res.status(201).json({ message: "Користувач створений!" });
 

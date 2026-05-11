@@ -85,16 +85,23 @@
     }
   }
 
-
+  window.gameoverMenu = async function gameoverMenu(total_score) {
+    const overlay_restart = document.getElementById("overlay-game-restart")
+    const total_restart_text = document.getElementById('total-restart-text');
+    if (overlay_restart) overlay_restart.style.display = 'flex';
+    if(total_restart_text) total_restart_text.innerText = total_score;
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
-
+    const overlay_restart = document.getElementById("overlay-game-restart")
     const login_modal = document.getElementById('login-modal');
     const profile_modal = document.getElementById('profile-modal');
     const profile_btn = document.getElementById('profile-btn');
     const profile_text = document.getElementById('profile-text');
     const logout_button = document.getElementById("logout-button");
-
+    const overlay_start = document.getElementById('overlay-game-start');
+    const start_button = document.getElementById("start-button");
+    const restart_button = document.getElementById("restart-button");
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
@@ -118,7 +125,16 @@
         }
       });
     }
-
+    start_button.addEventListener('click', () => {
+      overlay_start.style.display = 'none';
+      const scene = game.scene.scenes[0];
+      RestartGame(scene);
+    })
+    restart_button.addEventListener('click', () => {
+      overlay_restart.style.display = 'none';
+      const scene = game.scene.scenes[0];
+      RestartGame(scene);
+    })
     logout_button.addEventListener('click', () => {
       localStorage.removeItem("username");
       localStorage.removeItem("token");

@@ -11,7 +11,7 @@ const config = {
     },
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH, 
+        autoCenter: Phaser.Scale.CENTER_BOTH,
     },
 };
 
@@ -20,7 +20,12 @@ var DOWN = 1;
 var LEFT = 2;
 var RIGHT = 3;
 
+
+
+var running = false;
 var total = 0;
+const score_text = document.getElementById('score-total');
+
 
 const game = new Phaser.Game(config);
 
@@ -62,18 +67,18 @@ class Apple extends Phaser.GameObjects.Sprite {
 }
 
 class Snake {
-    constructor(scene){
+    constructor(scene) {
         this.scene = scene;
-        this.body = []; 
-        this.grid_size = 21; 
+        this.body = [];
+        this.grid_size = 21;
 
-        this.direction = RIGHT; 
-        this.next_direction = RIGHT; 
+        this.direction = RIGHT;
+        this.next_direction = RIGHT;
 
         this.move_time = 0;
         this.speed = 150;
 
-        this.head = scene.add.sprite(this.grid_size * 10, this.grid_size * 10,'body')
+        this.head = scene.add.sprite(this.grid_size * 10, this.grid_size * 10, 'body')
         this.head.setOrigin(0);
         this.body.push(this.head);
         this.grow();
@@ -104,6 +109,20 @@ class Snake {
         else if (this.direction === LEFT) x -= this.grid_size;
         else if (this.direction === RIGHT) x += this.grid_size;
 
+
+        const world_size = 420;
+
+        if (x < 0) {
+            x = world_size - this.grid_size;
+        } else if (x >= world_size) {
+            x = 0;
+        }
+
+        if (y < 0) {
+            y = world_size - this.grid_size;
+        } else if (y >= world_size) {
+            y = 0;
+        }
         let tail = this.body.pop();
         tail.x = this.head.x;
         tail.y = this.head.y;
@@ -122,8 +141,20 @@ class Snake {
         new_segment.setOrigin(0);
         this.body.push(new_segment);
     }
+
+    checkCollision() {
+        for (let i = 1; i < this.body.length; i++) {
+            if (this.head.x === this.body[i].x && this.head.y === this.body[i].y) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
+function update_text_score() {
+    score_text.innerText = total;
+}
 
 
 
@@ -133,7 +164,7 @@ function create() {
     food = new Apple(this, 21 * 5, 21 * 5);
     snake = new Snake(this);
     cursors = this.input.keyboard.createCursorKeys();
-
+    total = 0;
 
     let downX, upX, downY, upY, threshold = 40;
 
@@ -151,7 +182,6 @@ function create() {
         let diffY = Math.abs(downY - upY);
 
         if (diffX > diffY) {
-            // Горизонтальний рух
             if (upX < downX - threshold) {
                 snake.setDirection(LEFT);
             } else if (upX > downX + threshold) {
@@ -164,24 +194,43 @@ function create() {
                 snake.setDirection(DOWN);
             }
         }
-    });
-
     //https://www.html5gamedevs.com/topic/39661-creating-swiping-mechanism/
+    }); 
+
+    update_text_score()
 }
 
 function checkEat() {
     if (snake.head.x === food.x && snake.head.y === food.y) {
         food.eat();
         snake.grow();
+        update_text_score()
     }
 }
 
+function GameOver(scene){
+    console.log("Game over!");
+    running = false;
+    gameoverMenu(total);
+    scene.scene.restart();
+}
+
+function RestartGame(scene){
+    running = true;
+    scene.scene.restart();
+}
+
+
 function update(time) {
+    if(!running) return;
     if (cursors.up.isDown) snake.setDirection(UP);
     else if (cursors.down.isDown) snake.setDirection(DOWN);
     else if (cursors.left.isDown) snake.setDirection(LEFT);
     else if (cursors.right.isDown) snake.setDirection(RIGHT);
-    
+
     snake.update(time);
     checkEat();
+    if(snake.checkCollision()){
+        GameOver(this);
+    };
 }
