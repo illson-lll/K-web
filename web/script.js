@@ -121,8 +121,17 @@
         state.highscore = data.highScore;
         ui.updateProfileUI();
         ui.showToast("Ви ввійшли!")
+
+        const overlay_start = document.getElementById('overlay-game-start');
+        const overlay_restart = document.getElementById("overlay-game-restart");
+        if (overlay_restart) overlay_restart.style.display = 'none'; 
+        if (overlay_start) overlay_start.style.display = 'flex'; 
+        running = false; 
         const scene = game.scene.scenes[0];
-        GameOver(scene);
+        if (scene) {
+          scene.scene.restart(); 
+        }
+
       } else {
         ui.showError('login-error', data.message || "Невірний логін або пароль");
       }
