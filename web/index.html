@@ -207,13 +207,38 @@ https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
           <h7>Найкращий результат: <span id="personal-best-profile"></span></h7>
         </div>
         <div class="modal-footer d-flex justify-content-between">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрити</button>
+          <button type="button" form="login-form" id="del-account-button" data-bs-target="#delete-profile-modal"
+            data-bs-toggle="modal" class="btn btn-outline-secondary">Видалити профіль</button>
           <button type="button" form="login-form" id="logout-button" data-bs-dismiss="modal"
             class="btn btn-danger">Вийти</button>
         </div>
       </div>
     </div>
   </div>
+  <!-- Вікно видалення профілю -->
+  <div class="modal fade" id="delete-profile-modal" tabindex="-1" aria-labelledby="delete-profile-modal-label"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="delete-profile-modal-label">Профіль</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-2">Ви впевнені, що хочете видалити акаунт?</p>
+          <p class="fw-bold text-danger" id="username-delete-profile"></p>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрити</button>
+
+          <button type="button" form="login-form" id="del-account-confirm-button" data-bs-dismiss="modal"
+            class="btn btn-danger">Підтвердити</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Таблиця лідерів -->
 
   <div class="modal fade" id="leaderboard-modal" tabindex="-1" aria-labelledby="leaderboard-modal-label"

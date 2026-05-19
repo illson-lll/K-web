@@ -58,10 +58,21 @@ class Apple extends Phaser.GameObjects.Sprite {
     }
     eat() {
         total++;
+        let x, y;
+        let isShake;
+        do {
+            isShake = false;
+            x = Phaser.Math.Between(0, 19) * 21;
+            y = Phaser.Math.Between(0, 19) * 21;
 
-        let x = Phaser.Math.Between(0, 19) * 21;
-        let y = Phaser.Math.Between(0, 19) * 21;
-
+            for (let el of snake.body) {
+                if (el.x === x && el.y === y) {
+                    isShake = true;
+                    console.log("body");
+                    break;
+                }
+            }
+        } while (isShake);
         this.setPosition(x, y);
     }
 }
@@ -194,8 +205,8 @@ function create() {
                 snake.setDirection(DOWN);
             }
         }
-    //https://www.html5gamedevs.com/topic/39661-creating-swiping-mechanism/
-    }); 
+        //https://www.html5gamedevs.com/topic/39661-creating-swiping-mechanism/
+    });
 
     update_text_score()
 }
@@ -208,21 +219,21 @@ function checkEat() {
     }
 }
 
-function GameOver(scene){
+function GameOver(scene) {
     console.log("Game over!");
     running = false;
     gameoverMenu(total);
     scene.scene.restart();
 }
 
-function RestartGame(scene){
+function RestartGame(scene) {
     running = true;
     scene.scene.restart();
 }
 
 
 function update(time) {
-    if(!running) return;
+    if (!running) return;
     if (cursors.up.isDown) snake.setDirection(UP);
     else if (cursors.down.isDown) snake.setDirection(DOWN);
     else if (cursors.left.isDown) snake.setDirection(LEFT);
@@ -230,7 +241,7 @@ function update(time) {
 
     snake.update(time);
     checkEat();
-    if(snake.checkCollision()){
+    if (snake.checkCollision()) {
         GameOver(this);
     };
 }

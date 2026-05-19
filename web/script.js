@@ -121,6 +121,8 @@
         state.highscore = data.highScore;
         ui.updateProfileUI();
         ui.showToast("Ви ввійшли!")
+        const scene = game.scene.scenes[0];
+        GameOver(scene);
       } else {
         ui.showError('login-error', data.message || "Невірний логін або пароль");
       }
@@ -128,7 +130,40 @@
       ui.showError('login-error', "Сервер не доступний");
     }
   }
-  // Заповнення таблиці
+
+  // Видалення аккаунту 
+  async function deleteUserAccount() {
+    if (!state.isLoggedIn) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://${window.location.hostname}:3000/api/delete-account`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.clear();
+        state.isLoggedIn = false;
+        state.username = null;
+        state.highscore = 0;
+        const scene = game.scene.scenes[0];
+        GameOver(scene);
+        ui.updateProfileUI();
+        ui.showToast("Ваш акаунт видалено!");
+      } else {
+        ui.showToast(data.message || "Не вдалося видалити акаунт");
+      }
+    } catch (error) {
+      console.error("Помилка:", error);
+      ui.showToast("Помилка сервера");
+    }
+  }
+  // Оновленя таблиці лідераів
   async function updateLeaderboard() {
     const table = document.getElementById('leaderboard-table');
     if (!table) return;
@@ -137,26 +172,26 @@
 
     try {
       const response = await fetch(`http://${window.location.hostname}:3000/api/leaderboard`);
-      const top_players = await response.json();
+      const topPlayers = await response.json();
 
       if (response.ok) {
-        let rows_html = '';
+        let rowsHtml = '';
         for (let i = 0; i < 10; i++) {
-          const player = top_players[i]
+          const player = topPlayers[i]
 
           if (player) {
-            const is_loggined_player = player.username === state.username;
-            const row_class = is_loggined_player ? 'table-primary fw-bold' : '';
+            const isMe = player.username === state.username;
+            const rowClass = isMe ? 'table-primary fw-bold' : '';
 
-            rows_html += `
-            <tr class="${row_class}">
+            rowsHtml += `
+            <tr class="${rowClass}">
               <th scope="row">${i + 1}</th>
               <td>${player.username}</td>
               <td class="text-end font-monospace">${player.highScore}</td>
             </tr>
           `;
           } else {
-            rows_html += `
+            rowsHtml += `
             <tr class="text-muted">
               <th scope="row">${i + 1}</th>
               <td>-</td>
@@ -165,7 +200,8 @@
           `;
           }
         }
-        table.innerHTML = rows_html;
+
+        table.innerHTML = rowsHtml;
       }
     } catch (error) {
       table.innerHTML = '<tr><td colspan="3" class="text-center text-danger">Помилка мережі</td></tr>';
@@ -175,7 +211,9 @@
 
   window.gameoverMenu = async function gameoverMenu(total_score) {
     const overlay_restart = document.getElementById("overlay-game-restart")
+    const overlay_start = document.getElementById("overlay-game-start")
     const total_restart_text = document.getElementById('total-restart-text');
+    if (overlay_start) overlay_start.style.display = 'none';
     if (overlay_restart) overlay_restart.style.display = 'flex';
     if (total_restart_text) total_restart_text.innerText = total_score;
 
@@ -207,17 +245,18 @@
     const overlay_restart = document.getElementById("overlay-game-restart")
     const login_modal = document.getElementById('login-modal');
     const profile_modal = document.getElementById('profile-modal');
+    const delete_profile_modal = document.getElementById('delete-profile-modal');
+    const username_delete_profile = document.getElementById('username-delete-profile');
     const profile_btn = document.getElementById('profile-btn');
-    const profile_text = document.getElementById('profile-text');
     const logout_button = document.getElementById("logout-button");
     const overlay_start = document.getElementById('overlay-game-start');
     const start_button = document.getElementById("start-button");
     const restart_button = document.getElementById("restart-button");
     const leaderboard_btn = document.getElementById('leaderboard-btn');
-
+    const del_account_button = document.getElementById('del-account-button');
+    const del_account_confirm_button = document.getElementById('del-account-confirm-button');
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
-
     if (token && username) {
       state.isLoggedIn = true;
       state.username = username;
@@ -263,6 +302,16 @@
       ui.updateProfileUI();
       ui.showToast("Ви вийшли!");
     });
+    // Видалення аккаунту
+    del_account_button.addEventListener('click', () => {
+      if (username_delete_profile) {
+        username_delete_profile.innerText = state.username;
+      }
+    })
+    del_account_confirm_button.addEventListener('click', () => {
+      deleteUserAccount();
+    })
+
     // Заповнення таблиці
     leaderboard_btn.addEventListener('click', () => updateLeaderboard())
 

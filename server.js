@@ -90,6 +90,23 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+app.delete('/api/delete-account', authenticateToken, async (req, res) => {
+    try {
+        const result = await User.deleteOne({ username: req.user.name });
+        
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "Користувача не знайдено" });
+        }
+
+        console.log(`Користувача видалено: ${req.user.name}`);
+        res.json({ message: "Акаунт успішно видалено" });
+        
+    } catch (err) {
+        console.error("Помилка при видаленні акаунта:", err);
+        res.status(500).json({ message: "Помилка сервера при видаленні" });
+    }
+});
+
 app.post('/api/save-score', authenticateToken, async (req, res) => {
     try {
         const { score } = req.body;
