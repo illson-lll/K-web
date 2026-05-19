@@ -13,13 +13,17 @@ const config = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
+    render: {
+        pixelArt: true,
+        antialias: false,
+        premultipliedAlpha: false 
+    }
 };
 
 var UP = 0;
 var DOWN = 1;
 var LEFT = 2;
 var RIGHT = 3;
-
 
 
 var running = false;
