@@ -14,9 +14,8 @@ const config = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
     render: {
-        pixelArt: true,
         antialias: false,
-        premultipliedAlpha: false 
+        premultipliedAlpha: false
     }
 };
 
@@ -179,12 +178,6 @@ function create() {
     food = new Apple(this, 21 * 5, 21 * 5);
     snake = new Snake(this);
     cursors = this.input.keyboard.createCursorKeys();
-    wasd = this.input.keyboard.addKeys({
-        up: Phaser.Input.Keyboard.KeyCodes.W,
-        down: Phaser.Input.Keyboard.KeyCodes.S,
-        left: Phaser.Input.Keyboard.KeyCodes.A,
-        right: Phaser.Input.Keyboard.KeyCodes.D
-    });
     total = 0;
 
     let downX, upX, downY, upY, threshold = 40;
@@ -244,11 +237,10 @@ function RestartGame(scene) {
 
 function update(time) {
     if (!running) return;
-    if (cursors.up.isDown || wasd.up.isDown) snake.setDirection(UP);
-    else if (cursors.down.isDown || wasd.down.isDown) snake.setDirection(DOWN);
-    else if (cursors.left.isDown || wasd.left.isDown) snake.setDirection(LEFT);
-    else if (cursors.right.isDown || wasd.right.isDown) snake.setDirection(RIGHT);
-
+    if (cursors.up.isDown) snake.setDirection(UP);
+    else if (cursors.down.isDown) snake.setDirection(DOWN);
+    else if (cursors.left.isDown) snake.setDirection(LEFT);
+    else if (cursors.right.isDown) snake.setDirection(RIGHT);
     snake.update(time);
     checkEat();
     if (snake.checkCollision()) {

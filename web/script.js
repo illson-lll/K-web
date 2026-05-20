@@ -254,7 +254,6 @@
     const overlay_restart = document.getElementById("overlay-game-restart")
     const login_modal = document.getElementById('login-modal');
     const profile_modal = document.getElementById('profile-modal');
-    const delete_profile_modal = document.getElementById('delete-profile-modal');
     const username_delete_profile = document.getElementById('username-delete-profile');
     const profile_btn = document.getElementById('profile-btn');
     const logout_button = document.getElementById("logout-button");

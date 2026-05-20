@@ -74,10 +74,10 @@ app.post('/api/login', async (req, res) => {
         const user = await User.findOne({ username })
 
         if (user == null) {
-            return res.status(400).json({ message: 'Користувача не знайдено' });; // Перевірка існування
+            return res.status(400).json({ message: 'Користувача не знайдено' });
         }
 
-        if (await bcrypt.compare(password, user.password)) { // Перевірка пароля
+        if (await bcrypt.compare(password, user.password)) { 
             const token = jwt.sign({ name: user.username }, SECRET_KEY);
             return res.json({ token: token, username: user.username, highScore: user.highScore });
         } else {
