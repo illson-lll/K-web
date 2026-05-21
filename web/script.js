@@ -8,7 +8,7 @@
   };
   // Функції
 
-  // UI функції.
+  // UI функції
   const ui = {
     showToast(msg) {
       const toastLive = document.getElementById('liveToast')
@@ -53,7 +53,7 @@
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://${window.location.hostname}:3000/api/user-data`, {
+      const response = await fetch(`/user-data`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -73,9 +73,8 @@
 
   // Реєстрація
   async function registerUser(username, password) {
-    console.log(`logging ${username}`);
     try {
-      const response = await fetch(`http://${window.location.hostname}:3000/api/register`, {
+      const response = await fetch(`/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -99,7 +98,7 @@
   async function loginUser(username, password) {
     console.log(`logging ${username}`);
     try {
-      const response = await fetch(`http://${window.location.hostname}:3000/api/login`, {
+      const response = await fetch(`/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -146,7 +145,7 @@
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://${window.location.hostname}:3000/api/delete-account`, {
+      const response = await fetch(`/api/delete-account`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -172,7 +171,7 @@
       ui.showToast("Помилка сервера");
     }
   }
-  // Оновленя таблиці лідераів
+  // Оновленя таблиці лідерів
   async function updateLeaderboard() {
     const table = document.getElementById('leaderboard-table');
     if (!table) return;
@@ -180,7 +179,7 @@
     table.innerHTML = Array(10).fill('<tr><td colspan="3" class="text-center text-muted">-</td></tr>').join('');
 
     try {
-      const response = await fetch(`http://${window.location.hostname}:3000/api/leaderboard`);
+      const response = await fetch(`/api/leaderboard`);
       const topPlayers = await response.json();
 
       if (response.ok) {
@@ -236,7 +235,7 @@
     if (state.isLoggedIn) {
       try {
         const token = localStorage.getItem('token');
-        await fetch(`http://${window.location.hostname}:3000/api/save-score`, {
+        await fetch(`/api/save-score`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -330,8 +329,7 @@
       form.addEventListener('submit', async event => {
         if (form.id === 'reg-form') {
           const password = document.getElementById('reg-password');
-          const confirm = document.getElementById('reg-password-confirm');
-
+          const confirm = document.getElementById('reg-password-confirm');          
           if (password.value !== confirm.value) {
             confirm.setCustomValidity('Passwords do not match');
           } else {

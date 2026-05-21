@@ -71,7 +71,6 @@ class Apple extends Phaser.GameObjects.Sprite {
             for (let el of snake.body) {
                 if (el.x === x && el.y === y) {
                     isShake = true;
-                    console.log("body");
                     break;
                 }
             }
@@ -90,7 +89,7 @@ class Snake {
         this.next_direction = RIGHT;
 
         this.move_time = 0;
-        this.speed = 150;
+        this.speed = 200;
 
         this.head = scene.add.sprite(this.grid_size * 10, this.grid_size * 10, 'body')
         this.head.setOrigin(0);
@@ -223,7 +222,6 @@ function checkEat() {
 }
 
 function GameOver(scene) {
-    console.log("Game over!");
     running = false;
     gameoverMenu(total);
     scene.scene.restart();
