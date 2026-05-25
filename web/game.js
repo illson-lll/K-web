@@ -89,7 +89,7 @@ class Snake {
         this.next_direction = RIGHT;
 
         this.move_time = 0;
-        this.speed = 200;
+        this.speed = 150;
 
         this.head = scene.add.sprite(this.grid_size * 10, this.grid_size * 10, 'body')
         this.head.setOrigin(0);
